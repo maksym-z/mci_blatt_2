@@ -38,7 +38,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 	}
 	
 	this.reportError = function() {
-		this.responses[this.responses.length].currentErrors = this.responses[this.responses.length].currentErrors + 1;
+		this.responses[this.responses.length-1].currentErrors = this.responses[this.responses.length-1].currentErrors + 1;
 	}
 
 	this.stopExperiment = function () {
