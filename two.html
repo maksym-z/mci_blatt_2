@@ -47,7 +47,8 @@
 	}
 
 	function clearSimpleStimulus() {
-		context.clearRect(0, 0, canvas.width, canvas.height);
+		context.fillStyle = "rgba(255, 255, 255, 1)";
+		context.fillRect(0, 0, canvas.width, canvas.height);
 	}
 
 	function onKey(e) { 

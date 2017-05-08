@@ -38,7 +38,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 	}
 	
 	this.reportError = function() {
-		currentExperiments.errorsOnCurrentTrial = currentExperiments.errorsOnCurrentTrial + 1;
+		currentExperiment.errorsOnCurrentTrial = currentExperiment.errorsOnCurrentTrial + 1;
 	}
 
 	this.stopExperiment = function () {
@@ -64,7 +64,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 				}
 			}
 			meanDeltaTime[stimulusIndex] = Math.round(meanDeltaTime[stimulusIndex] / this.responses.length);
-			errorRate[stimulusIndex] = Math.round(errorRate[stimulusIndex] / this.responses.length);
+			errorRate[stimulusIndex] = (errorRate[stimulusIndex] / this.responses.length);
 			means = means + "Stimulus " + stimulusIndex + ", mean: " + meanDeltaTime[stimulusIndex] + " ms<br />";
 			for (var i = 0; i < this.responses.length; ++i) {
 				if (this.responses[i].stimulusID == stimulusIndex) {
@@ -103,8 +103,8 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 			alert("Error: stimulus ID not defined. Please define currentExperiment.currentStimulus");
 		};
 		this.responses.push(new this.response(currentExperiment.currentStimulus, responseTime, currentExperiment.errorsOnCurrentTrial));
+		document.getElementById("time").innerHTML = responseTime + " ms, errors: " + currentExperiment.errorsOnCurrentTrial;
 		this.errorsOnCurrentTrial = 0;
-		document.getElementById("time").innerHTML = responseTime + " ms";
 		document.getElementById("count").innerHTML = "Trials complete: " + currentExperiment.responses.length + " of " + currentExperiment.maxTrials;
 	}
 	
