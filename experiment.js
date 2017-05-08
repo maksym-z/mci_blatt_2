@@ -36,6 +36,10 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 		this.responseTime = responseTime;
 		this.currentErrors = currentErrors;
 	}
+	
+	this.reportError = function() {
+		this.responses[this.responses.length].currentErrors = this.responses[this.responses.length].currentErrors + 1;
+	}
 
 	this.stopExperiment = function () {
 		window.setTimeout(this.showStimulusFunction, 0);
