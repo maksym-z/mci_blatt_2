@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>Human Capabilities - Reaction test</title> </head>
+<body>
+
+<table width = "50%" align = "center"><tr valign = "center"><td>
+<h1><p id="text">Exercise D.2</p></h1>
+<canvas id="myCanvas" width="600" height="200"></canvas>
+<p id="instruction">Instructions will be shown here.</p>
+<p>
+<p id="time"></p> <p id="count"></p> <p id="mean"></p> <p id="sd"></p> </td></tr></table>
+
+<script src = "experiment.js"> </script>
+
+<script type="text/javascript">
+	var STIMULUS_CIRCLE = 0;
+	var STIMULUS_RECTANGLE = 1;
+	var currentStimulus = -1;
+	var canvas = document.getElementById('myCanvas');
+	var context = canvas.getContext('2d');
+	
+	function showSimpleStimulus() {
+		if (Math.random() * 100 > 50) {
+		  var centerX = canvas.width / 2;
+		  var centerY = canvas.height / 2;
+		  var radius = 70;
+		  currentStimulus = STIMULUS_CIRCLE;
+		  context.beginPath();
+		  context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+		  context.fillStyle = 'green';
+		  context.fill();
+		  context.lineWidth = 5;
+		  context.strokeStyle = '#003300';
+		  context.stroke();
+		  
+		} else {
+		  currentStimulus = STIMULUS_RECTANGLE;
+		  context.rect(20,20,150,100);
+		  context.fillStyle = 'green';
+		  context.fill();
+		  context.lineWidth = 5;
+		  context.strokeStyle = '#003300';
+		  context.stroke();
+		}
+		currentExperiment.currentStimulus = currentStimulus;
+      		testActive = true;
+	}
+
+	function clearSimpleStimulus() {
+		context.clearRect(0, 0, canvas.width, canvas.height);
+	}
+
+	function onKey(e) { 
+		if (e == null) {
+			e = window.event;
+		}
+		switch (e.which || e.charCode || e.keyCode) {
+			case 32:
+			// space
+			if (!currentExperiment.experimentActive) {
+				currentExperiment.startExperiment(); 
+			} else {
+				
+			}
+			break;
+			case 27: // esc
+			if (currentExperiment.experimentActive) {
+				currentExperiment.stopExperiment();
+			}
+			break;
+			case 65:
+			  if (testActive) {
+				if (currentStimulus == STIMULUS_CIRCLE) {
+				  currentExperiment.stopTest();
+				} else {
+				  currentExperiment.reportError();
+				}
+			  } else {
+				currentExperiment.reportError();
+			  }
+			  break;
+			case 66:
+			 if (testActive) {
+				if (currentStimulus == STIMULUS_RECTANGLE) {
+				  currentExperiment.stopTest();
+				} else {
+				  currentExperiment.reportError();
+				}
+			  } else {
+				currentExperiment.reportError();
+			  }
+			  break;
+		}
+	}
+
+	currentExperiment = new experiment(1, 
+	"You will be requested to press A when you see a CIRCLE and press B when you see a RECTANGLE.<br />" +
+	"Press SPACE BAR to begin.", 
+	"Press A when you see a CIRCLE and press B when you see a RECTANGLE.", 
+	showSimpleStimulus, clearSimpleStimulus, onKey, 4, ["Circle","Rectangle"]);
+</script>
+</body>
+</html>
