@@ -16,11 +16,11 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 	this.stimulusCount = stimulusNames.length;
 	this.stimulusNames = stimulusNames;
 	this.timesStimulusPresented = [];
+	this.go = true;
 	
 	for (var stimulusIndex = 0; stimulusIndex < this.stimulusCount; ++stimulusIndex) {
 		this.timesStimulusPresented.push(0);
 	}
-	
 
 	document.getElementById("instruction").innerHTML = preInstructionText;
 
@@ -108,10 +108,12 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 		if (typeof currentExperiment.currentStimulus == 'undefined') {
 			alert("Error: stimulus ID not defined. Please define currentExperiment.currentStimulus");
 		};
-		this.responses.push(new this.response(currentExperiment.currentStimulus, responseTime, currentExperiment.errorsOnCurrentTrial));
-		document.getElementById("time").innerHTML = responseTime + " ms, errors: " + currentExperiment.errorsOnCurrentTrial;
-		this.errorsOnCurrentTrial = 0;
-		document.getElementById("count").innerHTML = "Trials complete: " + currentExperiment.responses.length + " of " + currentExperiment.maxTrials;
+		if (currentExperiment.go) {
+			this.responses.push(new this.response(currentExperiment.currentStimulus, responseTime, currentExperiment.errorsOnCurrentTrial));
+			document.getElementById("time").innerHTML = responseTime + " ms, errors: " + currentExperiment.errorsOnCurrentTrial;
+			this.errorsOnCurrentTrial = 0;
+			document.getElementById("count").innerHTML = "Trials complete: " + currentExperiment.responses.length + " of " + currentExperiment.maxTrials;
+		}
 	}
 	
 	this.postData = function (path, params) {
@@ -136,7 +138,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 	this.startTest = function() {
 		currentExperiment.clearStimulusFunction();
 		timeInSeconds = Math.random() * 4 + 2; // 2 - 6s
-		window.setTimeout(this.showStimulus, timeInSeconds * 1000);
+		window.setTimeout(currentExperiment.showStimulus, timeInSeconds * 1000);
 	}
 
 	this.stopTest = function() {
@@ -155,7 +157,13 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 
 	this.showStimulus = function() {
 		currentExperiment.lastTimeStimulusPresented = new Date().getTime();
-		currentExperiment.showStimulusFunction();
-		currentExperiment.timesStimulusPresented[currentExperiment.currentStimulus] = currentExperiment.timesStimulusPresented[currentExperiment.currentStimulus] + 1;
+		currentExperiment.go = currentExperiment.showStimulusFunction();
+		//alert(currentExperiment.go)
+		if (currentExperiment.go) {
+			currentExperiment.timesStimulusPresented[currentExperiment.currentStimulus] = currentExperiment.timesStimulusPresented[currentExperiment.currentStimulus] + 1;
+		} else {
+			timeInSeconds = Math.random() * 4 + 2; // 2 - 6s
+			window.setTimeout(currentExperiment.startTest, timeInSeconds * 1000);
+		};
 	};
 }

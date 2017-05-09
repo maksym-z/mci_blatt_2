@@ -42,8 +42,9 @@
 		  context.strokeStyle = '#003300';
 		  context.stroke();
 		}
-		currentExperiment.currentStimulus = currentStimulus;
-      		testActive = true;
+		currentExperiment.currentStimulus = 0;
+		testActive = true;
+		return currentStimulus == STIMULUS_RECTANGLE;
 	}
 
 	function clearSimpleStimulus() {
@@ -61,14 +62,18 @@
 			if (!currentExperiment.experimentActive) {
 				currentExperiment.startExperiment(); 
 			} else {
-				
+				if (currentStimulus == STIMULUS_RECTANGLE && testActive) {
+				  currentExperiment.stopTest();
+				} else {
+				  currentExperiment.reportError();
+				}
 			}
 			break;
 			case 27: // esc
 			if (currentExperiment.experimentActive) {
 				currentExperiment.stopExperiment();
 			}
-			break;
+			break;/*
 			case 65:
 			  if (testActive) {
 				if (currentStimulus == STIMULUS_CIRCLE) {
@@ -90,15 +95,15 @@
 			  } else {
 				currentExperiment.reportError();
 			  }
-			  break;
+			  break;*/
 		}
 	}
 
 	currentExperiment = new experiment(2, 
-	"You will be requested to press A when you see a CIRCLE and press B when you see a RECTANGLE.<br />" +
+	"You will be requested to press SPACE only upon seeing a SQUARE. Please IGNORE any CIRCLEs.<br />" +
 	"Press SPACE BAR to begin.", 
-	"Press A when you see a CIRCLE and press B when you see a RECTANGLE.", 
-	showSimpleStimulus, clearSimpleStimulus, onKey, 6, ["Circle","Rectangle"]);
+	"Press SPACE BAR when you see a SQUARE.", 
+	showSimpleStimulus, clearSimpleStimulus, onKey, 6, ["Binary Stimulus"]);
 </script>
 </body>
 </html>
