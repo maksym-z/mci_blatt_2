@@ -16,6 +16,11 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 	this.stimulusCount = stimulusNames.length;
 	this.stimulusNames = stimulusNames;
 	this.timesStimulusPresented = [];
+	
+	for (var stimulusIndex = 0; stimulusIndex < this.stimulusCount; ++stimulusIndex) {
+		this.timesStimulusPresented.push(0);
+	}
+	
 
 	document.getElementById("instruction").innerHTML = preInstructionText;
 
@@ -55,7 +60,6 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 			meanDeltaTime.push(0);
 			standardDeviation.push(0);
 			errorRate.push(0);
-			currentExperiment.timesStimulusPresented.push(0);
 		}
 		
 		for (var stimulusIndex = 0; stimulusIndex < currentExperiment.stimulusCount; ++stimulusIndex) {
