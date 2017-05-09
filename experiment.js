@@ -152,5 +152,6 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 	this.showStimulus = function() {
 		currentExperiment.lastTimeStimulusPresented = new Date().getTime();
 		currentExperiment.showStimulusFunction();
+		timesStimulusPresented[currentExperiment.currentStimulus] = timesStimulusPresented[currentExperiment.currentStimulus] + 1;
 	};
 }
