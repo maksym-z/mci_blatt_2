@@ -15,6 +15,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 	this.showStimulusFunction = showStimulusFunction;
 	this.stimulusCount = stimulusNames.length;
 	this.stimulusNames = stimulusNames;
+	this.timesStimulusPresented = [];
 
 	document.getElementById("instruction").innerHTML = preInstructionText;
 
@@ -47,7 +48,6 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 		var meanDeltaTime = [];
 		var standardDeviation = [];
 		var errorRate = [];
-		var timesStimulusPresented = [];
 		var means = "";
 		var deviations = "";
 		
@@ -55,7 +55,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 			meanDeltaTime.push(0);
 			standardDeviation.push(0);
 			errorRate.push(0);
-			timesStimulusPresented.push(0);
+			currentExperiment.timesStimulusPresented.push(0);
 		}
 		
 		for (var stimulusIndex = 0; stimulusIndex < currentExperiment.stimulusCount; ++stimulusIndex) {
@@ -65,8 +65,8 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 					errorRate[stimulusIndex] += this.responses[i].currentErrors; 
 				}
 			}
-			meanDeltaTime[stimulusIndex] = Math.round(meanDeltaTime[stimulusIndex] / timesStimulusPresented[stimulusIndex]);
-			errorRate[stimulusIndex] = (errorRate[stimulusIndex] / timesStimulusPresented[stimulusIndex]);
+			meanDeltaTime[stimulusIndex] = Math.round(meanDeltaTime[stimulusIndex] / currentExperiment.timesStimulusPresented[stimulusIndex]);
+			errorRate[stimulusIndex] = (errorRate[stimulusIndex] / currentExperiment.timesStimulusPresented[stimulusIndex]);
 			means = means + "Stimulus " + stimulusIndex + ", mean: " + meanDeltaTime[stimulusIndex] + " ms<br />";
 			for (var i = 0; i < this.responses.length; ++i) {
 				if (this.responses[i].stimulusID == stimulusIndex) {
@@ -74,7 +74,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 					standardDeviation[stimulusIndex] += diff * diff; 
 				}
 			}
-			standardDeviation[stimulusIndex] = Math.round(Math.sqrt(standardDeviation[stimulusIndex] / timesStimulusPresented[stimulusIndex]));
+			standardDeviation[stimulusIndex] = Math.round(Math.sqrt(standardDeviation[stimulusIndex] / currentExperiment.timesStimulusPresented[stimulusIndex]));
 			deviations = deviations + "Stimulus " + stimulusIndex + ", SD: " + standardDeviation[stimulusIndex] + " ms<br />";
 			
 			document.getElementById("count").innerHTML = "Count: " + this.responses.length;
@@ -152,6 +152,6 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 	this.showStimulus = function() {
 		currentExperiment.lastTimeStimulusPresented = new Date().getTime();
 		currentExperiment.showStimulusFunction();
-		timesStimulusPresented[currentExperiment.currentStimulus] = timesStimulusPresented[currentExperiment.currentStimulus] + 1;
+		currentExperiment.timesStimulusPresented[currentExperiment.currentStimulus] = currentExperiment.timesStimulusPresented[currentExperiment.currentStimulus] + 1;
 	};
 }
