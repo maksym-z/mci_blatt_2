@@ -65,8 +65,8 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 					errorRate[stimulusIndex] += this.responses[i].currentErrors; 
 				}
 			}
-			meanDeltaTime[stimulusIndex] = Math.round(meanDeltaTime[stimulusIndex] / this.timesStimulusPresented[stimulusIndex]);
-			errorRate[stimulusIndex] = (errorRate[stimulusIndex] / this.timesStimulusPresented[stimulusIndex]);
+			meanDeltaTime[stimulusIndex] = Math.round(meanDeltaTime[stimulusIndex] / timesStimulusPresented[stimulusIndex]);
+			errorRate[stimulusIndex] = (errorRate[stimulusIndex] / timesStimulusPresented[stimulusIndex]);
 			means = means + "Stimulus " + stimulusIndex + ", mean: " + meanDeltaTime[stimulusIndex] + " ms<br />";
 			for (var i = 0; i < this.responses.length; ++i) {
 				if (this.responses[i].stimulusID == stimulusIndex) {
@@ -74,7 +74,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 					standardDeviation[stimulusIndex] += diff * diff; 
 				}
 			}
-			standardDeviation[stimulusIndex] = Math.round(Math.sqrt(standardDeviation[stimulusIndex] / this.timesStimulusPresented[stimulusIndex]));
+			standardDeviation[stimulusIndex] = Math.round(Math.sqrt(standardDeviation[stimulusIndex] / timesStimulusPresented[stimulusIndex]));
 			deviations = deviations + "Stimulus " + stimulusIndex + ", SD: " + standardDeviation[stimulusIndex] + " ms<br />";
 			
 			document.getElementById("count").innerHTML = "Count: " + this.responses.length;
