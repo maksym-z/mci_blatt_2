@@ -1,0 +1,116 @@
+<html>
+<head>
+<title>Human Capabilities - Reaction test</title> </head>
+<body>
+
+<table width = "50%" align = "center"><tr valign = "center"><td>
+<h1><p id="text">Exercise D.3</p></h1>
+<p id="instruction">Instructions will be shown here.</p>
+<p id="city"></p>
+<p id="prevCity"></p>
+<p id="time"></p> <p id="count"></p> <p id="mean"></p> <p id="sd"></p> </td></tr></table>
+
+<script src = "experiment.js"> </script>
+
+<script type="text/javascript">
+	var STIMULUS_CIRCLE = 0;
+	var STIMULUS_RECTANGLE = 1;
+	var currentStimulus = -1;
+	var cities = ["AACHEN","AUGSBURG","BIELEFELD","BOCHUM","BONN","BOTTROP","BRAUNSCHWEIG","BREMEN","BREMER­HAVEN","CHEMNITZ","DARMSTADT","DORTMUND","DRESDEN","DUISBURG","DÜSSELDORF","ERFURT","ERLANGEN","ESSEN","FRANKFURT","FREIBURG","FÜRTH","GELSENKIRCHEN","GLADBACH","GÖTTINGEN","HAGEN","HALLE","HAMBURG","HAMM","HANNOVER","HEIDELBERG","HEILBRONN","HERNE","HILDESHEIM","INGOLSTADT","JENA","KARLSRUHE","KASSEL","KIEL","KOBLENZ","KREFELD","KÖLN","LEIPZIG","LEVERKUSEN","LUDWIGSHAFEN","LÜBECK","MAGDEBURG","MAINZ","MANNHEIM","MOERS","MÖNCHEN­GLADBACH ","MÜLHEIM","MÜNCHEN","MÜNSTER","NEUSS","NÜRNBERG","OBERHAUSEN","OFFENBACH","OLDENBURG","OSNABRÜCK","PADERBORN","PFORZHEIM","POTSDAM","RECKLINGHAUSEN","REGENSBURG","REMSCHEID","REUTLINGEN","ROSTOCK","SAARBRÜCKEN","SALZGITTER","SIEGEN","SOLINGEN","STUTTGART","TRIER","ULM","WIESBADEN","WOLFSBURG","WUPPERTAL","WÜRZBURG"];
+	var currentCity = cities[Math.floor(Math.random()*cities.length)];
+	var prevCity = "";
+	var match = false;
+	function showSimpleStimulus() {
+		prevCity = currentCity;
+		currentCity = selectRandomCity(prevCity.substring(prevCity.length - 1));
+		match = currentCity.substring(1,0) == prevCity.substring(prevCity.length-1);
+		document.getElementById("city").innerHTML = "<h1>"+currentCity+"</h1>";
+		document.getElementById("prevCity").innerHTML = "The previous city was " + prevCity;
+		currentExperiment.currentStimulus = 0;
+		testActive = true;
+		return true;
+	}
+
+	function clearSimpleStimulus() {
+		document.getElementById("city").innerHTML = "";
+		document.getElementById("prevCity").innerHTML = "";
+	}
+	
+	function selectRandomCity(firstLetter){
+		var matchingCities = [];
+		var nonMatchingCities = [];
+		for (var i = 0; i < cities.length; i++) {
+			var s = cities[i];
+			if ((s.substring(0,1)==firstLetter)) {
+				matchingCities.push(s);
+			} else {
+				nonMatchingCities.push(s);
+			}
+		}
+		var rnd = Math.random();
+		var randomCity = "";
+		if (rnd>=0.5) {
+			randomCity = matchingCities[Math.floor(Math.random()*matchingCities.length)];
+		} else {
+			randomCity = nonMatchingCities[Math.floor(Math.random()*nonMatchingCities.length)];
+		};
+		return randomCity;
+	}
+
+	function onKey(e) { 
+		if (e == null) {
+			e = window.event;
+		}
+		switch (e.which || e.charCode || e.keyCode) {
+			case 32:
+			// space
+			if (!currentExperiment.experimentActive) {
+				currentExperiment.startExperiment(); 
+			} else {
+				
+			}
+			break;
+			case 27: // esc
+			if (currentExperiment.experimentActive) {
+				currentExperiment.stopExperiment();
+			}
+			break;
+			case 84:
+			  if (testActive) {
+				if (match) {
+				  currentExperiment.stopTest();
+				} else {
+				  currentExperiment.reportError();
+				  currentExperiment.stopTest();
+				}
+			  } else {
+				currentExperiment.reportError();
+			  }
+			  break;
+			case 70:
+			 if (testActive) {
+				if (!match) {
+				  currentExperiment.stopTest();
+				} else {
+				  currentExperiment.reportError();
+				  currentExperiment.stopTest();
+				}
+			  } else {
+				currentExperiment.reportError();
+			  }
+			  break;
+		}
+	}
+
+	currentExperiment = new experiment(3, 
+	"You will be shown names of different cities.<br />"+
+	"You have to decide whether the <strong>first letter</strong> of the city's name matches the <strong>last letter</strong> of the city mentioned just before.<br />" +
+	"E.g., for the city of Amsterda<strong>m</strong>, the city <strong>M</strong>oscow is a match, and <strong>N</strong>ew York is not.<br /> We start with the city <strong>"+
+	currentCity + "</strong>, i.e., after the experiment begins, you have to decide, whether the next city's name begins with <strong>" +
+	currentCity.substring(currentCity.length-1) + "</strong>.<br />" +
+	"Press T (true) for match and F (false) for mismatch. Now press SPACE to begin.", 
+	"Press T for match and F for mismatch.", 
+	showSimpleStimulus, clearSimpleStimulus, onKey, 20, ["Complex Stimulus"]);
+</script>
+</body>
+</html>
