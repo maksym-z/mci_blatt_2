@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>Human Capabilities - Reaction test</title> </head>
+<body>
+
+<table width = "50%" align = "center"><tr valign = "center"><td>
+<h1><p id="text">Exercise D.4</p></h1>
+<p id="instruction">Instructions will be shown here.</p>
+<canvas id="myCanvas" width="600" height="450"></canvas>
+<p>
+<p id="time"></p> <p id="count"></p> <p id="mean"></p> <p id="sd"></p> </td></tr></table>
+
+<script src = "experiment.js"> </script>
+
+<script type="text/javascript">
+	var GOOD_ALIEN = 0;
+	var BAD_ALIEN = 1;
+	var currentStimulus = -1;
+	var canvas = document.getElementById('myCanvas');
+	var context = canvas.getContext('2d');
+	
+	function showSimpleStimulus() {
+		var rnd = Math.random() * 100;
+		context = canvas.getContext('2d');
+		if (rnd > 50) {
+			currentStimulus = BAD_ALIEN;
+		} else {
+			currentStimulus = GOOD_ALIEN;
+			// draw picture of alien
+		}
+		currentExperiment.currentStimulus = 0;
+		testActive = true;
+		return currentStimulus == BAD_ALIEN;
+	}
+
+	function clearSimpleStimulus() {
+		context.fillStyle = "rgba(255, 255, 255, 1)";
+		context.fillRect(0, 0, canvas.width, canvas.height);
+	}
+
+	function onKey(e) { 
+		if (e == null) {
+			e = window.event;
+		}
+		switch (e.which || e.charCode || e.keyCode) {
+			case 32:
+			// space
+			if (!currentExperiment.experimentActive) {
+				currentExperiment.startExperiment(); 
+			} else {
+				if (currentStimulus == BAD_ALIEN && testActive) {
+					currentExperiment.stopTest();
+				} else {
+					currentExperiment.stopTest();
+					currentExperiment.reportError();
+				}
+			}
+			break;
+			case 27: // esc
+			if (currentExperiment.experimentActive) {
+				currentExperiment.stopExperiment();
+			}
+			break;
+		}
+	}
+
+	currentExperiment = new experiment(2, 
+	"Our planet is under attack by space invaders.<br /> Press SPACE BAR to shoot them with your BFG-9000.<br /> Make sure not to shoot any GOOD aliens." +
+	"Press SPACE BAR to begin.", 
+	"Press SPACE BAR to shoot.", 
+	showSimpleStimulus, clearSimpleStimulus, onKey, 6, ["Alien Invasion"]);
+</script>
+</body>
+</html>
