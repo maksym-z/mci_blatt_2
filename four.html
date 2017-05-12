@@ -18,14 +18,39 @@
 	var currentStimulus = -1;
 	var canvas = document.getElementById('myCanvas');
 	var context = canvas.getContext('2d');
+	var imageObj = new Image();
+	var imgBad = new Image();
+	var imgGood = new Image();
+	var imgBoom = new Image();
 	
+	imageObj.src = 'background.jpg';
+	imgBad.src = 'bad_alien.png';
+	imgGood.src = 'good_alien.png';
+	imgBoom.src = 'boom.png';
+	
+	var centerX = 0;
+	var centerY = 0;
+	
+	imageObj.onload = function() {
+		context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+	};
+
 	function showSimpleStimulus() {
 		var rnd = Math.random() * 100;
-		context = canvas.getContext('2d');
+
+		var safeWidth = canvas.width - 50;
+		var safeHeight = canvas.height - 250;
+		centerX = Math.random() * safeWidth;
+		centerY = Math.random() * safeHeight + 200;
+		redrawBackground();
+		
 		if (rnd > 50) {
 			currentStimulus = BAD_ALIEN;
+			context.drawImage(imgBad, centerX, centerY, 75, 100);
+			//alert("bad");
 		} else {
 			currentStimulus = GOOD_ALIEN;
+			context.drawImage(imgGood, centerX, centerY, 50, 100);
 			// draw picture of alien
 		}
 		currentExperiment.currentStimulus = 0;
@@ -34,8 +59,13 @@
 	}
 
 	function clearSimpleStimulus() {
-		context.fillStyle = "rgba(255, 255, 255, 1)";
-		context.fillRect(0, 0, canvas.width, canvas.height);
+		/*context.fillStyle = "rgba(255, 255, 255, 1)";
+		context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);*/
+		
+	}
+	
+	function redrawBackground() {
+		context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
 	}
 
 	function onKey(e) { 
@@ -48,12 +78,18 @@
 			if (!currentExperiment.experimentActive) {
 				currentExperiment.startExperiment(); 
 			} else {
-				if (currentStimulus == BAD_ALIEN && testActive) {
-					currentExperiment.stopTest();
+				if (testActive) {
+					if (currentStimulus == BAD_ALIEN) {
+						currentExperiment.stopTest();
+					} else {
+						currentExperiment.stopTest();
+						currentExperiment.reportError();
+					}
+					window.setTimeout(redrawBackground, 50);
+					context.drawImage(imgBoom, centerX, centerY, 50, 50);
 				} else {
-					currentExperiment.stopTest();
 					currentExperiment.reportError();
-				}
+				};
 			}
 			break;
 			case 27: // esc
@@ -64,11 +100,11 @@
 		}
 	}
 
-	currentExperiment = new experiment(2, 
+	currentExperiment = new experiment(4, 
 	"Our planet is under attack by space invaders.<br /> Press SPACE BAR to shoot them with your BFG-9000.<br /> Make sure not to shoot any GOOD aliens." +
 	"Press SPACE BAR to begin.", 
 	"Press SPACE BAR to shoot.", 
-	showSimpleStimulus, clearSimpleStimulus, onKey, 6, ["Alien Invasion"]);
+	showSimpleStimulus, clearSimpleStimulus, onKey, 20, ["Alien Invasion"]);
 </script>
 </body>
 </html>
