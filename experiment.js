@@ -17,6 +17,8 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 	this.stimulusNames = stimulusNames;
 	this.timesStimulusPresented = [];
 	this.go = true;
+	this.largestDelay = 6;
+	this.smallestDelay = 2;
 	
 	for (var stimulusIndex = 0; stimulusIndex < this.stimulusCount; ++stimulusIndex) {
 		this.timesStimulusPresented.push(0);
@@ -137,7 +139,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 
 	this.startTest = function() {
 		currentExperiment.clearStimulusFunction();
-		timeInSeconds = Math.random() * 4 + 2; // 2 - 6s
+		timeInSeconds = Math.random() * (currentExperiment.largestDelay - currentExperiment.smallestDelay) + currentExperiment.smallestDelay;
 		window.setTimeout(currentExperiment.showStimulus, timeInSeconds * 1000);
 	}
 
@@ -162,7 +164,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 		if (currentExperiment.go) {
 			currentExperiment.timesStimulusPresented[currentExperiment.currentStimulus] = currentExperiment.timesStimulusPresented[currentExperiment.currentStimulus] + 1;
 		} else {
-			timeInSeconds = Math.random() * 4 + 2; // 2 - 6s
+			timeInSeconds = Math.random() * (currentExperiment.largestDelay - currentExperiment.smallestDelay) + currentExperiment.smallestDelay;
 			window.setTimeout(currentExperiment.startTest, timeInSeconds * 1000);
 		};
 	};
