@@ -101,7 +101,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 			dataToPost["errors"+stimulusIndex] = errorRate[stimulusIndex];
 			dataToPost["stimulus"+stimulusIndex] = currentExperiment.stimulusNames[stimulusIndex];
 		}
-		alert(JSON.stringify(dataToPost));
+		//alert(JSON.stringify(dataToPost));
 		this.postData('/get_data', dataToPost);
 		times = [];
 	}

@@ -22,6 +22,8 @@
 	var imgBad = new Image();
 	var imgGood = new Image();
 	var imgBoom = new Image();
+	var killStreak = 0;
+	var bestResponseTime = 350;
 	
 	imageObj.src = 'background.jpg';
 	imgBad.src = 'bad_alien.png';
@@ -62,10 +64,29 @@
 		/*context.fillStyle = "rgba(255, 255, 255, 1)";
 		context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);*/
 		
+		
+	}
+	
+	function motivationalText() {
+		var text = "";
+		if (killStreak > 0 && killStreak % 5 == 0) {
+			text += "ACHIEVEMENT: KILL STREAK OF " + killStreak + "! ";
+		}
+		if (currentStimulus > -1 && currentExperiment.responses.length > 0) {
+			var responseTime = currentExperiment.responses[currentExperiment.responses.length-1].responseTime;
+			if (responseTime<bestResponseTime) {
+				text += "FASTEST SHOT: " + responseTime + " ms!";
+				bestResponseTime = responseTime;
+			}
+		}
+		context.font="20px Georgia";
+		context.fillText(text,25,50);
+		context.fillStyle="#FF0000";
 	}
 	
 	function redrawBackground() {
 		context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+		motivationalText();
 	}
 
 	function onKey(e) { 
@@ -80,13 +101,16 @@
 			} else {
 				if (testActive) {
 					if (currentStimulus == BAD_ALIEN) {
+						killStreak++;
 						currentExperiment.stopTest();
 					} else {
+						killStreak = 0;
 						currentExperiment.stopTest();
 						currentExperiment.reportError();
 					}
-					window.setTimeout(redrawBackground, 50);
 					context.drawImage(imgBoom, centerX, centerY, 50, 50);
+					window.setTimeout(redrawBackground, 50);
+					
 				} else {
 					currentExperiment.reportError();
 				};
@@ -101,9 +125,9 @@
 	}
 
 	currentExperiment = new experiment(4, 
-	"Our planet is under attack by space invaders.<br /> Press SPACE BAR to shoot them with your BFG-9000.<br /> Make sure not to shoot any GOOD aliens." +
+	"Our planet is under attack by space invaders (purple).<br /> Press SPACE BAR to shoot them with your BFG-9000.<br /> Make sure not to shoot any GOOD aliens (green)." +
 	"Press SPACE BAR to begin.", 
-	"Press SPACE BAR to shoot.", 
+	"Press SPACE BAR to shoot. Shoot the purple aliens only!", 
 	showSimpleStimulus, clearSimpleStimulus, onKey, 20, ["Alien Invasion"]);
 	currentExperiment.largestDelay = 3;
 	currentExperiment.smallestDelay = 0.5;
