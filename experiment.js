@@ -65,8 +65,8 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 		var errorRate = [];
 		var means = "";
 		var deviations = "";
-		
-		if (this.id <= 4) {
+		alert(currentExperiment.id);
+		if (currentExperiment.id <= 4) {
 		  for (var stimulusIndex = 0; stimulusIndex < currentExperiment.stimulusCount; ++stimulusIndex) {
 			  meanDeltaTime.push(0);
 			  standardDeviation.push(0);
@@ -105,7 +105,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 			'count': this.responses.length,
 			'stimulusCount': this.stimulusCount
 		}
-		if (this.id <= 4) {
+		if (currentExperiment.id <= 4) {
 		  for (var stimulusIndex = 0; stimulusIndex < currentExperiment.stimulusCount; ++stimulusIndex) {
 			  dataToPost["mean"+stimulusIndex] = currentExperiment.responses[stimulusIndex].x;
 			  dataToPost["sd"+stimulusIndex] = standardDeviation[stimulusIndex];
