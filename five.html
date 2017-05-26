@@ -6,63 +6,58 @@
 <table width = "50%" align = "center"><tr valign = "center"><td>
 <h1><p id="text">Exercise D.2</p></h1>
 <p id="instruction">Instructions will be shown here.</p>
-<canvas id="myCanvas" width="600" height="450"></canvas>
+<canvas id="myCanvas" width="1024" height="768"></canvas>
 <p>
 <p id="time"></p> <p id="count"></p> <p id="mean"></p> <p id="sd"></p> </td></tr></table>
 
 <script src = "experiment.js"> </script>
 
 <script type="text/javascript">
-	var STIMULUS_CIRCLE = 0;
-	var STIMULUS_RECTANGLE = 1;
+	var STIMULUS_SIZE = 0;
 	var currentStimulus = -1;
 	var canvas = document.getElementById('myCanvas');
 	var context = canvas.getContext('2d');
+	var target_list = new Array(100);
+	var current_trial = -1;
+	target_list.fill(5,0,19);
+	target_list.fill(10,20,39);
+	target_list.fill(20,40,59);
+	target_list.fill(30,60,79);
+	target_list.fill(50,70,99);
+	
+	function shuffle(a) {
+	    var j, x, i;
+	    for (i = a.length; i; i--) {
+		j = Math.floor(Math.random() * i);
+		x = a[i - 1];
+		a[i - 1] = a[j];
+		a[j] = x;
+	    }
+	}
+	
+	shuffle(target_list);
 	
 	function showSimpleStimulus() {
-		var rnd = Math.random() * 100;
-		if (rnd > 50) {
-			context = canvas.getContext('2d');
-		  var radius = Math.random() * 100 + 75;
-		  
-		  var safeWidth = canvas.width - radius*2;
-		  var safeHeight = canvas.height - radius*2;
-		  var centerX = Math.random() * safeHeight  + radius;
-		  var centerY = Math.random() * safeHeight  + radius;
-		  
-		  currentStimulus = STIMULUS_CIRCLE;
-		  context.beginPath();
-		  context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-		  context.fillStyle = 'green';
-		  context.fill();
-		  context.lineWidth = 5;
-		  context.strokeStyle = '#003300';
-		  context.stroke();
-		  context.closePath();
-		} else {
-			context = canvas.getContext('2d');
-			
-			
-			context.fillStyle = "rgba(255, 255, 255, 1)";
-			context.fillRect(0, 0, canvas.width, canvas.height);
-		    currentStimulus = STIMULUS_RECTANGLE;
-		  context.beginPath();
-		  var sideLength = Math.random() * 200 + 150;
-		  var safeWidth = canvas.width - sideLength;
-		  var safeHeight = canvas.height - sideLength;
-		  var centerX = Math.random() * safeWidth;
-		  var centerY = Math.random() * safeHeight ;
-		  
-		  context.rect(centerX,centerY,sideLength,sideLength);
-		  context.fillStyle = 'green';
-		  context.fill();
-		  context.lineWidth = 5;
-		  context.strokeStyle = '#003300';
-		  context.stroke();
-		}
-		currentExperiment.currentStimulus = 0;
-		testActive = true;
-		return currentStimulus == STIMULUS_RECTANGLE;
+	      current_trial++;
+	      var radius = target_list[current_trial];
+	      
+	      var safeWidth = canvas.width - radius*2;
+	      var safeHeight = canvas.height - radius*2;
+	      var centerX = Math.random() * safeHeight  + radius;
+	      var centerY = Math.random() * safeHeight  + radius;
+	      
+	      currentStimulus = target_list[current_trial];
+	      context.beginPath();
+	      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+	      context.fillStyle = 'green';
+	      context.fill();
+	      context.lineWidth = 0;
+	      context.strokeStyle = '#003300';
+	      context.stroke();
+	      context.closePath();
+	      currentExperiment.currentStimulus = 0;
+	      testActive = true;
+	      return true;
 	}
 
 	function clearSimpleStimulus() {
@@ -80,11 +75,7 @@
 			if (!currentExperiment.experimentActive) {
 				currentExperiment.startExperiment(); 
 			} else {
-				if (currentStimulus == STIMULUS_RECTANGLE && testActive) {
-				  currentExperiment.stopTest();
-				} else {
-				  currentExperiment.reportError();
-				}
+			  currentExperiment.stopTest();
 			}
 			break;
 			case 27: // esc
@@ -121,7 +112,9 @@
 	"You will be requested to press SPACE only upon seeing a SQUARE. Please IGNORE any CIRCLEs.<br />" +
 	"Press SPACE BAR to begin.", 
 	"Press SPACE BAR when you see a SQUARE.", 
-	showSimpleStimulus, clearSimpleStimulus, onKey, 25, ["Binary Stimulus"]);
+	showSimpleStimulus, clearSimpleStimulus, onKey, 100, ["Binary Stimulus"]);
+	currentExperiment.largestDelay = 0.1;
+	currentExperiment.smallestDelay = 0;
 </script>
 </body>
 </html>
