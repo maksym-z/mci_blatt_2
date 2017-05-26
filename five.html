@@ -13,12 +13,14 @@
 <script src = "experiment.js"> </script>
 
 <script type="text/javascript">
-	var STIMULUS_SIZE = 0;
 	var currentStimulus = -1;
 	var canvas = document.getElementById('myCanvas');
 	var context = canvas.getContext('2d');
 	var target_list = new Array(100);
 	var current_trial = -1;
+	var current_x = 0;
+	var current_y = 0;
+	var current_distance_squared = 0;
 	target_list.fill(5,0,19);
 	target_list.fill(10,20,39);
 	target_list.fill(20,40,59);
@@ -43,8 +45,15 @@
 	      
 	      var safeWidth = canvas.width - radius*2;
 	      var safeHeight = canvas.height - radius*2;
-	      var centerX = Math.random() * safeHeight  + radius;
-	      var centerY = Math.random() * safeHeight  + radius;
+	      var centerX;
+	      var centerY;
+	      do {
+		centerX = Math.random() * safeWidth  + radius;
+		centerY = Math.random() * safeHeight  + radius;
+		current_distance_squared = Math.pow(centerX - current_x,2) + Math.pow(centerY - current_y,2);
+	      } while (current_distance_squared < 30*30);
+	      current_x = centerX;
+	      current_y = centerY;
 	      
 	      currentStimulus = target_list[current_trial];
 	      context.beginPath();
@@ -52,7 +61,7 @@
 	      context.fillStyle = 'green';
 	      context.fill();
 	      context.lineWidth = 0;
-	      context.strokeStyle = '#003300';
+	      context.strokeStyle = '#009900';
 	      context.stroke();
 	      context.closePath();
 	      currentExperiment.currentStimulus = 0;
@@ -61,9 +70,20 @@
 	}
 
 	function clearSimpleStimulus() {
-		context.fillStyle = "rgba(255, 255, 255, 1)";
+		context.fillStyle = "rgba(200, 200, 200, 1)";
 		context.fillRect(0, 0, canvas.width, canvas.height);
 	}
+	
+	canvas.addEventListener('click',function(evt){
+	  var rect = canvas.getBoundingClientRect();
+	  var clickx = evt.clientX - rect.left;
+	  var clicky = evt.clientY - rect.top;
+	  if (Math.pow(clickx - current_x,2) + Math.pow(clicky - current_y,2) < target_list[current_trial]*target_list[current_trial])  {
+	    currentExperiment.index_of_difficulty = Math.log2(2*Math.sqrt(current_distance_squared)/target_list[current_trial]);
+	    currentExperiment.target_size = target_list[current_trial];
+	    currentExperiment.stopTest();
+	  };
+	},false);
 
 	function onKey(e) { 
 		if (e == null) {
@@ -75,7 +95,6 @@
 			if (!currentExperiment.experimentActive) {
 				currentExperiment.startExperiment(); 
 			} else {
-			  currentExperiment.stopTest();
 			}
 			break;
 			case 27: // esc
@@ -108,11 +127,11 @@
 		}
 	}
 
-	currentExperiment = new experiment(2, 
-	"You will be requested to press SPACE only upon seeing a SQUARE. Please IGNORE any CIRCLEs.<br />" +
+	currentExperiment = new experiment(5, 
+	"Please use your MOUSE to click the green circles.<br />" +
 	"Press SPACE BAR to begin.", 
-	"Press SPACE BAR when you see a SQUARE.", 
-	showSimpleStimulus, clearSimpleStimulus, onKey, 100, ["Binary Stimulus"]);
+	"Please use your input device to click the green circles.", 
+	showSimpleStimulus, clearSimpleStimulus, onKey, 100, ["Mouse"]);
 	currentExperiment.largestDelay = 0.1;
 	currentExperiment.smallestDelay = 0;
 </script>
