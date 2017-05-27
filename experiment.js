@@ -65,7 +65,6 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 		var errorRate = [];
 		var means = "";
 		var deviations = "";
-		alert(currentExperiment.id);
 		if (currentExperiment.id <= 4) {
 		  for (var stimulusIndex = 0; stimulusIndex < currentExperiment.stimulusCount; ++stimulusIndex) {
 			  meanDeltaTime.push(0);
@@ -119,7 +118,7 @@ function experiment(id, preInstructionText, instructionText, showStimulusFunctio
 			  dataToPost["size"+stimulusIndex] = currentExperiment.responses[stimulusIndex].target_size;
 		  }
 		}
-		alert(JSON.stringify(dataToPost));
+//		alert(JSON.stringify(dataToPost));
 		this.postData('/get_data', dataToPost);
 		times = [];
 	}
