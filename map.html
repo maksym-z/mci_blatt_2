@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<table width = "90%"><tr>
+<td>
+	<p id="debug">Debug</p>
+	<canvas id="myCanvas" width="400" height="800" style="border:1px solid #d3d3d3;">Your browser is bad and you should feel bad.</canvas>
+</td>
+<td>
+	<p id = "sector_info">Sector Info</p>
+</td>
+</tr>
+</table>
+
+<!--
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+-->
+<script src="jquery-3.2.1.min.js"></script>
+<script src = "geography.sqf"></script>
+<script src = "js/progress.sqf"></script>
+<script src = "js/unitContainer.js"></script>
+<script src = "js/model.js"></script>
+<script src = "js/view.js"></script>
+<script src = "js/controller.js"></script>
+<script>
+
+//var polygons = [];
+
+
+var mainController = new controller;
+
+
+$(document).ready(function(){
+    $("canvas").on("mousemove", function(event) {
+		mainController.view.onMouseMove(event.pageX, event.pageY)
+	});
+	$("canvas" ).click(function() {
+		mainController.view.onMouseClick()
+	});
+	
+	var c=document.getElementById("myCanvas");
+    var ctx=c.getContext("2d");
+    var img=document.getElementById("map");
+    ctx.drawImage(img,5,15,400,400);
+
+});
+
+</script>
+<img id="map" src="map.png">
+</body>
+</html>
