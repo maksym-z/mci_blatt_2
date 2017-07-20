@@ -31,7 +31,7 @@
 var mainController = new controller;
 
 
-$(document).ready(function(){
+$(window).on("load", function(){
     $("canvas").on("mousemove", function(event) {
 		mainController.view.onMouseMove(event.pageX, event.pageY)
 	});
@@ -47,6 +47,7 @@ $(document).ready(function(){
 });
 
 </script>
+<script src = "static/js/test_units.js"></script>
 <img id="map" src="static/map.png">
 </body>
 </html>

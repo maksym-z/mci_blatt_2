@@ -1,0 +1,12 @@
+companyCommander = new unit("Officer",null);
+platoonLeader = new unit("Sergeant",null);
+soldier1 = new unit("Soldier",platoonLeader);
+soldier2 = new unit("Soldier",platoonLeader);
+company = new unitContainer(2);
+platoon = new unitContainer(2);
+company.units.push(companyCommander);
+platoon.units.push(platoonLeader);
+platoon.units.push(soldier1);
+platoon.units.push(soldier2);
+company.subUnitContainers.push(platoon);
+mainController.model.sectors[2].unitContainer=company;
